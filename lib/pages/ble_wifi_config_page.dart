@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:component_test_app/blufi/blufi_manager.dart';
 
 class BleWifiConfigPage extends StatefulWidget {
@@ -21,6 +22,7 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
   String? _configStatus;
 
   final BlufiManager _blufiManager = BlufiManager.instance;
+  Completer<bool>? _configCompleter; // ← 添加 Completer 用于异步等待
 
   final List<String> _mockWifiNetworks = [
     'Home_WiFi',
@@ -40,13 +42,18 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
     _blufiManager.onMessageReceived(
       successCallback: (data) {
         debugPrint('✅ BluFi 成功: $data');
+        
+        // 通知等待者配置成功
+        if (_configCompleter != null && !_configCompleter!.isCompleted) {
+          _configCompleter!.complete(true);
+        }
+
         if (mounted) {
           setState(() {
             _isConfiguring = false;
             _configStatus = '✓ WiFi 配置成功！设备正在连接网络...';
           });
 
-          // 3 秒后清除状态
           Future.delayed(const Duration(seconds: 3)).then((_) {
             if (mounted) {
               setState(() => _configStatus = null);
@@ -56,6 +63,12 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
       },
       errorCallback: (error) {
         debugPrint('❌ BluFi 失败: $error');
+        
+        // 通知等待者配置失败
+        if (_configCompleter != null && !_configCompleter!.isCompleted) {
+          _configCompleter!.complete(false);
+        }
+
         if (mounted) {
           setState(() {
             _isConfiguring = false;
@@ -301,37 +314,50 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
     try {
       debugPrint('🔌 开始 BluFi 配置: SSID=${_ssidController.text}');
 
+      // 创建 Completer 用于等待设备响应
+      _configCompleter = Completer<bool>();
+
       // 调用真实 BluFi 配置
       await _blufiManager.configProvision(
         ssid: _ssidController.text.trim(),
         password: _passwordController.text,
       );
 
-      debugPrint('✅ BluFi 配置命令已发送，等待设备响应...');
+      debugPrint(
+          '✅ BluFi 配置命令已发送给设备，正在等待设备响应...');
 
-      // 等待 2 秒以获得设备反馈
-      await Future.delayed(const Duration(seconds: 2));
+      // 等待设备回调响应（最多 5 秒）
+      final success = await _configCompleter!.future
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              debugPrint('⏱ 等待设备响应超时（5秒）');
+              return false; // 超时判定为失败
+            },
+          )
+          .catchError((e) {
+            debugPrint('❌ 等待回调异常: $e');
+            return false;
+          });
 
-      // 如果这里没有收到错误回调，说明配置成功
-      if (mounted && _isConfiguring) {
+      if (mounted && !success) {
+        // 未收到成功回调 → 显示超时提示
         setState(() {
           _isConfiguring = false;
-          _configStatus = '✓ WiFi 配置成功！设备正在连接网络...';
+          _configStatus =
+              '⏱ 等待设备响应超时。命令已发送，请检查设备状态';
         });
-
-        await Future.delayed(const Duration(seconds: 3));
-        if (mounted) {
-          setState(() => _configStatus = null);
-        }
       }
     } catch (e) {
       debugPrint('❌ BluFi 配置异常: $e');
       if (mounted) {
         setState(() {
           _isConfiguring = false;
-          _configStatus = '✗ 配置失败: $e';
+          _configStatus = '✗ 配置异常: $e';
         });
       }
+    } finally {
+      _configCompleter = null;
     }
   }
 
