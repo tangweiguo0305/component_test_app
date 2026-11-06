@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:component_test_app/pages/ble_wifi_config_page.dart';
 
 class BleConnectPage extends StatefulWidget {
   const BleConnectPage({super.key});
@@ -248,6 +249,28 @@ class _BleConnectPageState extends State<BleConnectPage> {
                           '设备已连接',
                           style: TextStyle(
                             color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        // 前往 WiFi 配置按钮
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BleWifiConfigPage(
+                                  deviceId:
+                                      _connectedDevice!.remoteId.toString(),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.wifi),
+                          label: const Text('前往 WiFi 配置'),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
                           ),
                         ),
                       ],

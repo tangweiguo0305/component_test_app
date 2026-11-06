@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:component_test_app/blufi/blufi_manager.dart';
 
 class BleWifiConfigPage extends StatefulWidget {
-  const BleWifiConfigPage({super.key});
+  final String? deviceId;
+
+  const BleWifiConfigPage({
+    super.key,
+    this.deviceId,
+  });
 
   @override
   State<BleWifiConfigPage> createState() => _BleWifiConfigPageState();
@@ -14,12 +20,51 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
   bool _isConfiguring = false;
   String? _configStatus;
 
+  final BlufiManager _blufiManager = BlufiManager.instance;
+
   final List<String> _mockWifiNetworks = [
     'Home_WiFi',
     'Office_Network',
     'Guest_WiFi',
     'Smart_Home',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _initBlufiCallbacks();
+  }
+
+  /// 初始化 BluFi 回调
+  void _initBlufiCallbacks() {
+    _blufiManager.onMessageReceived(
+      successCallback: (data) {
+        debugPrint('✅ BluFi 成功: $data');
+        if (mounted) {
+          setState(() {
+            _isConfiguring = false;
+            _configStatus = '✓ WiFi 配置成功！设备正在连接网络...';
+          });
+
+          // 3 秒后清除状态
+          Future.delayed(const Duration(seconds: 3)).then((_) {
+            if (mounted) {
+              setState(() => _configStatus = null);
+            }
+          });
+        }
+      },
+      errorCallback: (error) {
+        debugPrint('❌ BluFi 失败: $error');
+        if (mounted) {
+          setState(() {
+            _isConfiguring = false;
+            _configStatus = '✗ 配置失败: $error';
+          });
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -241,33 +286,46 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
       return;
     }
 
+    if (_passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('WiFi 密码至少 8 个字符')),
+      );
+      return;
+    }
+
     setState(() {
       _isConfiguring = true;
       _configStatus = '正在配置 WiFi...';
     });
 
     try {
-      // 模拟 WiFi 配置延迟
-      await Future.delayed(const Duration(seconds: 3));
+      debugPrint('🔌 开始 BluFi 配置: SSID=${_ssidController.text}');
 
-      // 验证密码长度
-      if (_passwordController.text.length < 8) {
-        throw Exception('WiFi 密码过短，至少需要 8 个字符');
-      }
+      // 调用真实 BluFi 配置
+      await _blufiManager.configProvision(
+        ssid: _ssidController.text.trim(),
+        password: _passwordController.text,
+      );
 
-      if (mounted) {
+      debugPrint('✅ BluFi 配置命令已发送，等待设备响应...');
+
+      // 等待 2 秒以获得设备反馈
+      await Future.delayed(const Duration(seconds: 2));
+
+      // 如果这里没有收到错误回调，说明配置成功
+      if (mounted && _isConfiguring) {
         setState(() {
           _isConfiguring = false;
           _configStatus = '✓ WiFi 配置成功！设备正在连接网络...';
         });
 
-        // 3 秒后清除状态
         await Future.delayed(const Duration(seconds: 3));
         if (mounted) {
           setState(() => _configStatus = null);
         }
       }
     } catch (e) {
+      debugPrint('❌ BluFi 配置异常: $e');
       if (mounted) {
         setState(() {
           _isConfiguring = false;

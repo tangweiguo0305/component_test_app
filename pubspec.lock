@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "1.4.0"
   charset:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: charset
       sha256: "27802032a581e01ac565904ece8c8962564b1070690794f0072f6865958ce8b9"
@@ -214,7 +214,7 @@ packages:
     source: hosted
     version: "0.3.5+5"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: e3626ae6270383c9e3a549f34c9e4cd26c09ae6a9adaab2bf4737a00340efdc4
@@ -1853,7 +1853,7 @@ packages:
     source: hosted
     version: "3.25.1"
   wifi_iot:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: wifi_iot
       sha256: "466aa682dfec9347f359ed552a35a2bc046597c39eb6005b36627b0bc8819d70"
