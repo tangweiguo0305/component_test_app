@@ -66,7 +66,7 @@ class _BleConnectPageState extends State<BleConnectPage> {
 
     try {
       await device.connect(
-        license: FlutterBluePlus.License.free,
+        license: License.free,
         timeout: const Duration(seconds: 10),
         mtu: null,
       );
