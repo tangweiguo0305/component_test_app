@@ -33,7 +33,7 @@ jobs:
       
       # 步骤 5: 格式检查 (确保代码风格统一)
       - name: Check code format
-        run: flutter format --set-exit-if-changed .
+        run: dart format --set-exit-if-changed .
         continue-on-error: true
       
       # 步骤 6: 运行所有单元测试和 Widget 测试

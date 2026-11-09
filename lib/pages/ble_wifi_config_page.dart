@@ -82,7 +82,7 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _mockWifiNetworks.length,
-                separatorBuilder: (_, __) => Divider(
+                separatorBuilder: (context, index) => Divider(
                   height: 0,
                   color: Colors.grey.shade200,
                 ),
@@ -93,9 +93,13 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
                     title: Text(network),
                     trailing: Radio<String>(
                       value: network,
+                      // ignore: deprecated_member_use
                       groupValue: _ssidController.text,
-                      onChanged: (value) {
-                        setState(() => _ssidController.text = value ?? '');
+                      // ignore: deprecated_member_use
+                      onChanged: (String? value) {
+                        if (value != null) {
+                          setState(() => _ssidController.text = value);
+                        }
                       },
                     ),
                   );
