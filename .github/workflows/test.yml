@@ -31,12 +31,7 @@ jobs:
         run: flutter analyze
         continue-on-error: true
       
-      # 步骤 5: 格式检查 (确保代码风格统一)
-      - name: Check code format
-        run: dart format --set-exit-if-changed .
-        continue-on-error: true
-      
-      # 步骤 6: 运行所有单元测试和 Widget 测试
+      # 步骤 5: 运行所有单元测试和 Widget 测试
       - name: Run tests
         run: flutter test
 
