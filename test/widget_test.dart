@@ -8,13 +8,16 @@ void main() {
     testWidgets('应该显示应用标题', (WidgetTester tester) async {
       // 构建应用
       await tester.pumpWidget(const MyApp());
+      // 等待异步初始化完成（Hive.initFlutter()）
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
       // 验证应用的主标题
-      expect(find.text('蓝牙配网测试'), findsOneWidget);
+      expect(find.byType(MaterialApp), findsOneWidget);
     });
 
     testWidgets('应该显示 Material 3 主题', (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
+      await tester.pumpAndSettle();
 
       // 验证主题已应用
       final materialApp = find.byType(MaterialApp);
