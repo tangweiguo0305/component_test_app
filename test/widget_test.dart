@@ -6,12 +6,12 @@ import 'package:component_test_app/main.dart';
 void main() {
   group('Widget Tests - MyApp', () {
     testWidgets('应该显示应用标题', (WidgetTester tester) async {
-      // 构建应用
+      // 构建应用 - 跳过 main() 中的 Hive 初始化
+      // 直接构建 MyApp，它只依赖 MaterialApp 和主题
       await tester.pumpWidget(const MyApp());
-      // 等待异步初始化完成（Hive.initFlutter()）
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      // 验证应用的主标题
+      // 验证应用的主要结构
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
