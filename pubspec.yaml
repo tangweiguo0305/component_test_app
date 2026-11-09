@@ -31,12 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # 核心依赖
-  ckzl_core:
-    path: ../AI_Frame/packages/ckzl_core
-  ckzl_configure:
-    path: ../AI_Frame/packages/ckzl_configure
-
   # 蓝牙和权限
   flutter_blue_plus: ^2.1.1
   permission_handler: ^12.0.0
