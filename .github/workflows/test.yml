@@ -29,18 +29,18 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
-      # 步骤 2.6: 缓存 Gradle 依赖和构建输出
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            build/
-            android/app/build/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      # 步骤 2.6: 缓存 Gradle 依赖和构建输出 (暂时屏蔽)
+      # - name: Cache Gradle packages
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.gradle/caches
+      #       ~/.gradle/wrapper
+      #       build/
+      #       android/app/build/
+      #     key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gradle-
       
       # 步骤 3: 获取项目依赖
       # ❌ 失败会导致整个流程停止（依赖冲突、版本不匹配等）
