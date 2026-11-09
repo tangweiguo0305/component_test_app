@@ -18,7 +18,7 @@ jobs:
       # 步骤 2: 安装 Flutter 和配置环境
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.1'
+          flutter-version: '3.22.0'
           channel: 'stable'
           cache: true
       
@@ -51,7 +51,7 @@ jobs:
       
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.1'
+          flutter-version: '3.22.0'
           channel: 'stable'
           cache: true
       
@@ -78,7 +78,7 @@ jobs:
       
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.1'
+          flutter-version: '3.22.0'
           channel: 'stable'
           cache: true
       
