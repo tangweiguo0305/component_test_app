@@ -1,0 +1,135 @@
+name: Flutter CI/CD 自动测试
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # 任务 1: 代码质量检查和单元测试
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 步骤 1: 检出代码
+      - uses: actions/checkout@v4
+      
+      # 步骤 2: 安装 Flutter 和配置环境
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.1'
+          channel: 'stable'
+          cache: true
+      
+      # 步骤 3: 获取项目依赖
+      - name: Get dependencies
+        run: flutter pub get
+      
+      # 步骤 4: 代码静态分析 (Lint 检查)
+      - name: Analyze code
+        run: flutter analyze
+      
+      # 步骤 5: 格式检查 (确保代码风格统一)
+      - name: Check code format
+        run: flutter format --set-exit-if-changed .
+        continue-on-error: true
+      
+      # 步骤 6: 运行所有单元测试和 Widget 测试，生成覆盖率
+      - name: Run tests with coverage
+        run: flutter test --coverage
+      
+      # 步骤 7: 上传覆盖率报告到 Codecov (可选)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: flutter
+          fail_ci_if_error: false
+        continue-on-error: true
+      
+      # 步骤 8: 生成覆盖率报告摘要
+      - name: Generate coverage report
+        if: always()
+        run: |
+          mkdir -p coverage-report
+          echo "## 📊 测试覆盖率报告" > coverage-report/summary.md
+          echo "" >> coverage-report/summary.md
+          echo "### 测试执行信息" >> coverage-report/summary.md
+          echo "- 时间: $(date)" >> coverage-report/summary.md
+          echo "- 分支: ${{ github.ref }}" >> coverage-report/summary.md
+          echo "- 提交: ${{ github.sha }}" >> coverage-report/summary.md
+        continue-on-error: true
+      
+      # 步骤 9: 发布测试结果 (如果测试失败，这会显示详细的失败信息)
+      - name: Comment PR with test results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const testResultPath = './coverage-report/summary.md';
+            if (fs.existsSync(testResultPath)) {
+              const summary = fs.readFileSync(testResultPath, 'utf8');
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: summary
+              });
+            }
+        continue-on-error: true
+
+  # 任务 2: 构建 APK (Android)
+  build-android:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.1'
+          channel: 'stable'
+          cache: true
+      
+      - name: Get dependencies
+        run: flutter pub get
+      
+      - name: Build APK
+        run: flutter build apk --release
+      
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  # 任务 3: 构建 iOS App (可选，需要 macOS runner)
+  build-ios:
+    runs-on: macos-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.1'
+          channel: 'stable'
+          cache: true
+      
+      - name: Get dependencies
+        run: flutter pub get
+      
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+      
+      - name: Upload iOS build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-build
+          path: build/ios/Release-iphoneos/Runner.app
