@@ -4,10 +4,7 @@ import 'dart:async';
 class BleWifiConfigPage extends StatefulWidget {
   final String? deviceId;
 
-  const BleWifiConfigPage({
-    super.key,
-    this.deviceId,
-  });
+  const BleWifiConfigPage({super.key, this.deviceId});
 
   @override
   State<BleWifiConfigPage> createState() => _BleWifiConfigPageState();
@@ -30,9 +27,7 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('WiFi 配置'),
-      ),
+      appBar: AppBar(title: const Text('WiFi 配置')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -82,10 +77,8 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _mockWifiNetworks.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 0,
-                  color: Colors.grey.shade200,
-                ),
+                separatorBuilder: (context, index) =>
+                    Divider(height: 0, color: Colors.grey.shade200),
                 itemBuilder: (context, index) {
                   final network = _mockWifiNetworks[index];
                   return ListTile(
@@ -150,9 +143,7 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
                         : Icons.visibility,
                   ),
                   onPressed: () {
-                    setState(
-                      () => _isObscurePassword = !_isObscurePassword,
-                    );
+                    setState(() => _isObscurePassword = !_isObscurePassword);
                   },
                 ),
               ),
@@ -166,9 +157,7 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
               child: ElevatedButton.icon(
                 onPressed: _isConfiguring ? null : _configureWiFi,
                 icon: Icon(
-                  _isConfiguring
-                      ? Icons.hourglass_bottom
-                      : Icons.cloud_upload,
+                  _isConfiguring ? Icons.hourglass_bottom : Icons.cloud_upload,
                 ),
                 label: Text(
                   _isConfiguring ? '配置中...' : '开始配置',
@@ -238,23 +227,23 @@ class _BleWifiConfigPageState extends State<BleWifiConfigPage> {
 
   Future<void> _configureWiFi() async {
     if (_ssidController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请输入 WiFi 网络名称')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('请输入 WiFi 网络名称')));
       return;
     }
 
     if (_passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请输入 WiFi 密码')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('请输入 WiFi 密码')));
       return;
     }
 
     if (_passwordController.text.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('WiFi 密码至少 8 个字符')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('WiFi 密码至少 8 个字符')));
       return;
     }
 

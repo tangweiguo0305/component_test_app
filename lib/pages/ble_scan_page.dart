@@ -44,9 +44,9 @@ class _BleScanPageState extends State<BleScanPage> {
     if (!mounted) return;
 
     if (!allGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('缺少必要权限')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('缺少必要权限')));
       return;
     }
 
@@ -76,9 +76,9 @@ class _BleScanPageState extends State<BleScanPage> {
       _stopScan();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('扫描失败: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('扫描失败: $e')));
       }
     }
   }
@@ -91,9 +91,9 @@ class _BleScanPageState extends State<BleScanPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('停止扫描失败: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('停止扫描失败: $e')));
       }
     }
   }
@@ -107,9 +107,7 @@ class _BleScanPageState extends State<BleScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('扫描蓝牙设备'),
-      ),
+      appBar: AppBar(title: const Text('扫描蓝牙设备')),
       body: Column(
         children: [
           // 状态栏
@@ -131,7 +129,9 @@ class _BleScanPageState extends State<BleScanPage> {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _statusMessage != null ? null : _requestPermissions,
+                    onPressed: _statusMessage != null
+                        ? null
+                        : _requestPermissions,
                     icon: Icon(_isScanning ? Icons.stop : Icons.search),
                     label: Text(_isScanning ? '扫描中...' : '开始扫描'),
                     style: ElevatedButton.styleFrom(
@@ -164,9 +164,11 @@ class _BleScanPageState extends State<BleScanPage> {
                           Icons.bluetooth_audio,
                           color: _getRssiColor(rssi),
                         ),
-                        title: Text(device.platformName.isNotEmpty
-                            ? device.platformName
-                            : '未命名设备'),
+                        title: Text(
+                          device.platformName.isNotEmpty
+                              ? device.platformName
+                              : '未命名设备',
+                        ),
                         subtitle: Text(
                           'MAC: ${device.remoteId}\nRSSI: $rssi dBm',
                           style: const TextStyle(fontSize: 12),
@@ -176,8 +178,7 @@ class _BleScanPageState extends State<BleScanPage> {
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content:
-                                    Text('已选择: ${device.platformName}'),
+                                content: Text('已选择: ${device.platformName}'),
                               ),
                             );
                           },

@@ -14,10 +14,7 @@ class _BleProvisionPageState extends State<BleProvisionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('蓝牙配网演示'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('蓝牙配网演示'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

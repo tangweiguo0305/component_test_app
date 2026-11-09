@@ -40,7 +40,7 @@ void main() {
       );
 
       expect(device.isConnected, isFalse);
-      
+
       device.isConnected = true;
       expect(device.isConnected, isTrue);
     });

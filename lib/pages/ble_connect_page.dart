@@ -33,9 +33,9 @@ class _BleConnectPageState extends State<BleConnectPage> {
 
     if (!statuses.values.every((status) => status.isGranted)) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('缺少必要权限')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('缺少必要权限')));
       }
       return;
     }
@@ -50,9 +50,9 @@ class _BleConnectPageState extends State<BleConnectPage> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('扫描失败: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('扫描失败: $e')));
       }
     }
   }
@@ -102,9 +102,9 @@ class _BleConnectPageState extends State<BleConnectPage> {
       List<BluetoothService> services = await device.discoverServices();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('发现 ${services.length} 个服务')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('发现 ${services.length} 个服务')));
       }
 
       // 显示服务详情
@@ -113,9 +113,9 @@ class _BleConnectPageState extends State<BleConnectPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('获取服务失败: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('获取服务失败: $e')));
       }
     }
   }
@@ -142,8 +142,7 @@ class _BleConnectPageState extends State<BleConnectPage> {
                     '特征数: ${service.characteristics.length}',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
-                  if (index < services.length - 1)
-                    const Divider(height: 16),
+                  if (index < services.length - 1) const Divider(height: 16),
                 ],
               );
             },
@@ -176,9 +175,9 @@ class _BleConnectPageState extends State<BleConnectPage> {
       _scanDevices();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('断开连接失败: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('断开连接失败: $e')));
       }
     }
   }
@@ -193,9 +192,7 @@ class _BleConnectPageState extends State<BleConnectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('连接蓝牙设备'),
-      ),
+      appBar: AppBar(title: const Text('连接蓝牙设备')),
       body: Column(
         children: [
           // 连接状态
@@ -247,9 +244,7 @@ class _BleConnectPageState extends State<BleConnectPage> {
                         const SizedBox(height: 8),
                         Text(
                           '设备已连接',
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                          ),
+                          style: TextStyle(color: Colors.grey.shade600),
                         ),
                         const SizedBox(height: 32),
                         // 前往 WiFi 配置按钮
@@ -258,8 +253,8 @@ class _BleConnectPageState extends State<BleConnectPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => BleWifiConfigPage(
-                                  deviceId:
-                                      _connectedDevice!.remoteId.toString(),
+                                  deviceId: _connectedDevice!.remoteId
+                                      .toString(),
                                 ),
                               ),
                             );
@@ -284,9 +279,11 @@ class _BleConnectPageState extends State<BleConnectPage> {
 
                       return ListTile(
                         leading: const Icon(Icons.bluetooth),
-                        title: Text(device.platformName.isNotEmpty
-                            ? device.platformName
-                            : '未命名设备'),
+                        title: Text(
+                          device.platformName.isNotEmpty
+                              ? device.platformName
+                              : '未命名设备',
+                        ),
                         subtitle: Text(
                           device.remoteId.toString(),
                           style: const TextStyle(fontSize: 12),
