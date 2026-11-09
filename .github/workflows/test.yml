@@ -23,16 +23,17 @@ jobs:
           cache: true
       
       # 步骤 3: 获取项目依赖
+      # ❌ 失败会导致整个流程停止（依赖冲突、版本不匹配等）
       - name: Get dependencies
         run: flutter pub get
       
       # 步骤 4: 代码静态分析 (Lint 检查)
+      # ⚠️ 使用 --no-fatal-infos 允许 info 级别问题，但 error 级别问题仍会失败
       - name: Analyze code
         run: flutter analyze --no-fatal-infos
-        continue-on-error: true
       
       # 步骤 5: 运行所有单元测试和 Widget 测试
+      # ❌ 如果依赖有问题或代码编译错误，测试会失败
+      # ❌ 任何测试失败都会导致流程停止（16 个测试）
       - name: Run tests
         run: flutter test
-
-
