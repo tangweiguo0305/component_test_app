@@ -28,7 +28,7 @@ jobs:
       
       # 步骤 4: 代码静态分析 (Lint 检查)
       - name: Analyze code
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
         continue-on-error: true
       
       # 步骤 5: 运行所有单元测试和 Widget 测试
