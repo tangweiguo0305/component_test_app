@@ -32,23 +32,23 @@ dependencies:
     sdk: flutter
 
   # 蓝牙和权限
-  flutter_blue_plus: ^2.1.1
-  permission_handler: ^12.0.0
+  flutter_blue_plus: 2.1.1
+  permission_handler: 12.0.3
   
   # 状态管理
-  flutter_riverpod: ^3.0.3
+  flutter_riverpod: 3.3.2
   
   # 数据存储
-  hive_flutter: ^1.1.0
+  hive_flutter: 1.1.0
   
   # BluFi 配网框架依赖
-  wifi_iot: ^0.3.19+2
-  crypto: ^3.0.6
-  charset: ^2.0.1
+  wifi_iot: 0.3.19+3
+  crypto: 3.0.8
+  charset: 2.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  cupertino_icons: 1.0.9
 
 dev_dependencies:
   flutter_test:
@@ -59,7 +59,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^6.0.0
+  flutter_lints: 6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
