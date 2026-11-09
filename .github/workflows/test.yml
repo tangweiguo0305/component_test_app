@@ -22,15 +22,22 @@ jobs:
           channel: 'stable'
           cache: true
       
+      # 步骤 2.5: 安装 Java 17 (Android 编译需要)
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
       # 步骤 3: 获取项目依赖
       # ❌ 失败会导致整个流程停止（依赖冲突、版本不匹配等）
       - name: Get dependencies
         run: flutter pub get
       
-      # 步骤 4: 编译检查 (确保代码可以编译到 Android/iOS)
-      # ❌ 编译错误会导致流程停止 - 这是关键！
+      # 步骤 4: 编译 APK 检查
+      # ❌ 编译错误会导致流程停止
       - name: Build APK (Compile check)
-        run: flutter build apk --debug 2>&1 | head -100
+        run: flutter build apk --debug
       
       # 步骤 5: 代码静态分析 (Lint 检查)
       # ⚠️ 使用 --no-fatal-infos 允许 info 级别问题，但 error 级别问题仍会失败
