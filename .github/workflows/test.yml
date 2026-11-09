@@ -62,10 +62,11 @@ jobs:
         run: flutter build apk --release
       
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: ignore
 
   # 任务 3: 构建 iOS App (可选，需要 macOS runner)
   build-ios:
@@ -89,7 +90,8 @@ jobs:
         run: flutter build ios --release --no-codesign
       
       - name: Upload iOS build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ios-build
           path: build/ios/Release-iphoneos/Runner.app
+          if-no-files-found: ignore
