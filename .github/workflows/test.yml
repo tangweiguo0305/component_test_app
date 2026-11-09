@@ -15,10 +15,10 @@ jobs:
       # 步骤 1: 检出代码
       - uses: actions/checkout@v4
       
-      # 步骤 2: 安装 Flutter 和配置环境
+      # 步骤 2: 安装 Flutter 和配置环境（使用本地版本 3.38.3）
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.38.3'
           channel: 'stable'
           cache: true
       
@@ -51,14 +51,9 @@ jobs:
       
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.38.3'
           channel: 'stable'
           cache: true
-      
-      - name: Get dependencies
-        run: flutter pub get
-      
-      - name: Build APK
         run: flutter build apk --release
       
       - name: Upload APK artifact
@@ -78,7 +73,7 @@ jobs:
       
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.38.3'
           channel: 'stable'
           cache: true
       
