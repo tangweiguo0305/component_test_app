@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.10.1
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,8 +35,16 @@ dependencies:
   flutter_blue_plus: ^2.1.1
   permission_handler: ^12.0.0
   
+  # 状态管理
+  flutter_riverpod: ^3.0.3
+  
   # 数据存储
   hive_flutter: ^1.1.0
+  
+  # BluFi 配网框架依赖
+  wifi_iot: ^0.3.19+2
+  crypto: ^3.0.6
+  charset: ^2.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,7 +54,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: 4.0.0
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
